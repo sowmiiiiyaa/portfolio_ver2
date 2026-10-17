@@ -80,8 +80,13 @@ export function useGitHubData() {
           }),
         ]);
 
-        if (!profileResponse.ok || !repoResponse.ok || !activityResponse.ok) {
-          throw new Error('GitHub profile data could not be loaded right now.');
+        const failedResponse = [profileResponse, repoResponse, activityResponse].find((response) => !response.ok);
+        if (failedResponse) {
+          const remaining = failedResponse.headers.get('X-RateLimit-Remaining');
+          if (failedResponse.status === 403 && remaining === '0') {
+            throw new Error('GitHub API rate limit reached. Profile links remain available.');
+          }
+          throw new Error(`GitHub API returned ${failedResponse.status}. Profile links remain available.`);
         }
 
         const profileJson = (await profileResponse.json()) as GitHubProfileSummary;

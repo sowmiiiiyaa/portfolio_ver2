@@ -12,6 +12,7 @@
   html {
     scroll-behavior: smooth;
     background: #0b0b0f;
+    scroll-padding-top: 5.5rem;
   }
 
   body {
@@ -39,7 +40,7 @@
 
 @layer components {
   .section-shell {
-    @apply relative overflow-hidden border-b border-white/10 py-16 md:py-24;
+    @apply relative border-b border-white/10 py-10 md:py-10;
     background: transparent;
   }
 
@@ -159,20 +160,6 @@
   inset: 0;
   opacity: 0.025;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
-}
-
-.atmosphere[data-scene='1'] .atmosphere__orb--one {
-  transform: translate(24vw, 14vh) scale(1.25);
-  background: #7ee787;
-}
-
-.atmosphere[data-scene='2'] .atmosphere__orb--two {
-  transform: translate(-25vw, -20vh) scale(1.35);
-  background: #c8ff4d;
-}
-
-.atmosphere[data-scene='3'] {
-  background: linear-gradient(135deg, #0b0b0f 0%, #101711 50%, #0b0b0f 100%);
 }
 
 .top-nav {
@@ -562,9 +549,57 @@
 .about-layout {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.72fr);
+  grid-template-columns: minmax(11rem, 0.62fr) minmax(0, 1fr) minmax(16rem, 0.72fr);
   align-items: center;
-  gap: 5rem;
+  gap: 2.5rem;
+}
+
+.about-photo {
+  position: relative;
+  min-height: 16rem;
+  overflow: hidden;
+  border: 1px solid rgba(200, 255, 77, 0.28);
+  background: #101116;
+}
+
+.about-photo::after {
+  position: absolute;
+  inset: 0.7rem;
+  border: 1px solid rgba(200, 255, 77, 0.25);
+  content: '';
+  pointer-events: none;
+}
+
+.about-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 16rem;
+  object-fit: cover;
+  filter: saturate(0.8) contrast(1.05);
+}
+
+.about-photo__fallback {
+  display: grid;
+  min-height: 16rem;
+  place-content: center;
+  gap: 0.6rem;
+  padding: 1rem;
+  color: #c8ff4d;
+  font-family: 'JetBrains Mono', monospace;
+  text-align: center;
+}
+
+.about-photo__fallback span {
+  font-size: 1.4rem;
+  letter-spacing: 0.18em;
+}
+
+.about-photo__fallback small {
+  max-width: 12rem;
+  color: #8f9b8c;
+  font-size: 0.62rem;
+  line-height: 1.5;
 }
 
 .about-intro {
@@ -689,6 +724,117 @@
   gap: 5rem;
 }
 
+#skills.section-shell {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+#skills .space-y-5 {
+  gap: 1rem;
+}
+
+#skills h2 {
+  max-width: 42rem;
+  font-size: clamp(1.9rem, 3.5vw, 3rem);
+}
+
+#skills .grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+#skills article {
+  min-width: 0;
+  padding: 0.85rem;
+  border-radius: 0.7rem;
+  box-shadow: none;
+}
+
+#skills article > div:first-child {
+  align-items: center;
+}
+
+#skills article > div:first-child > div {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.55rem;
+  box-shadow: none;
+  font-size: 1rem;
+}
+
+#skills article h3 {
+  margin-top: 0.75rem;
+  font-size: 0.95rem;
+}
+
+#skills article p {
+  margin-top: 0.35rem;
+  font-size: 0.7rem;
+  line-height: 1.45;
+}
+
+#skills article span {
+  max-width: 6.5rem;
+  overflow: hidden;
+  font-size: 0.46rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hero-section {
+  min-height: min(42rem, calc(100vh - 7.5rem));
+  gap: 2rem;
+  padding-top: 5.5rem;
+  padding-bottom: 3rem;
+}
+
+.hero-section h1 {
+  font-size: clamp(3.8rem, 9.7vw, 7.5rem);
+}
+
+.hero-section h1 > span {
+  white-space: nowrap;
+}
+
+.hero-section__statement {
+  margin-top: 1.7rem;
+  font-size: clamp(1.45rem, 2.8vw, 2.5rem);
+}
+
+.hero-section__intro {
+  max-width: 29rem;
+  margin-top: 1rem;
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.hero-section__actions {
+  margin-top: 1.4rem;
+}
+
+.hero-signal {
+  min-height: min(34rem, 72vh);
+}
+
+#contact.section-shell,
+#github.section-shell,
+#terminal.section-shell {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+#contact .max-w-3xl,
+#github .space-y-5,
+#terminal .space-y-4 {
+  gap: 1.2rem;
+}
+
+#contact h2,
+#github h2,
+#terminal h2 {
+  font-size: clamp(1.9rem, 3.5vw, 3rem);
+}
+
 .journey-timeline {
   position: relative;
   padding: 0.5rem 0 0.5rem 2rem;
@@ -776,6 +922,11 @@
   line-height: 1.55;
   opacity: 0;
   transition: max-height 220ms ease, opacity 220ms ease;
+}
+
+.journey-step__content--selected .journey-step__description {
+  max-height: 5rem;
+  opacity: 1;
 }
 
 .journey-step__content:hover .journey-step__description,
@@ -970,6 +1121,20 @@
   box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.26);
 }
 
+@media (max-width: 1100px) {
+  #skills .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .about-layout {
+    grid-template-columns: minmax(10rem, 0.55fr) minmax(0, 1fr);
+  }
+
+  .about-photo {
+    grid-row: span 2;
+  }
+}
+
 @media (max-width: 700px) {
   .top-nav {
     top: 0.75rem;
@@ -1017,7 +1182,7 @@
   }
 
   .hero-section h1 {
-    font-size: clamp(4rem, 22vw, 7rem);
+    font-size: clamp(3.65rem, 18vw, 5.5rem);
   }
 
   .hero-signal {
@@ -1025,10 +1190,54 @@
     border-radius: 50%;
   }
 
-  .about-layout,
   .journey-layout,
   .project-feature {
     display: block;
+  }
+
+  #skills .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .about-layout {
+    display: grid;
+    grid-template-columns: 7rem minmax(0, 1fr);
+    align-items: start;
+    gap: 1.25rem;
+  }
+
+  .about-photo {
+    grid-row: span 2;
+    min-height: 7rem;
+    margin-bottom: 0;
+  }
+
+  .about-photo img,
+  .about-photo__fallback {
+    min-height: 7rem;
+  }
+
+  .about-photo__fallback span {
+    font-size: 0.7rem;
+  }
+
+  .about-photo__fallback small {
+    display: none;
+  }
+
+  .about-intro h2 {
+    margin-top: 0.65rem;
+    font-size: 1.8rem;
+  }
+
+  .about-intro > p:last-child {
+    margin-top: 0.8rem;
+    font-size: 0.8rem;
+  }
+
+  .about-details {
+    grid-column: 1 / -1;
+    margin-top: 1.5rem;
   }
 
   .about-details {

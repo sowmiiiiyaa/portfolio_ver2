@@ -24,9 +24,9 @@ export const profile = {
   name: 'Sowmiya S',
   title: 'DevOps & Cloud Engineering Student',
   intro:
-    'I am a B.E. Computer Science and Engineering student graduating in 2028. I am focused on DevOps, cloud technologies, Python automation, Linux, Docker, Git, GitHub, and Jenkins, while currently learning AWS.',
+    'A Computer Science student building practical foundations in DevOps, cloud, automation, and CI/CD.',
   about:
-    'I enjoy learning how software moves from code to a working environment. My current interests are DevOps, cloud computing, Python automation, Linux, Docker, Jenkins, and Git/GitHub. I am building a practical foundation through projects and continuing to learn AWS.',
+    'I learn by tracing how software moves from code to a working environment, with a focus on DevOps, cloud concepts, automation, and delivery workflows.',
   college: "Stella Mary's College of Engineering, Nagercoil",
   degree: 'B.E. Computer Science and Engineering',
   graduation: '2028',
@@ -92,37 +92,37 @@ export const journey: JourneyStep[] = [
   {
     name: 'Python Fundamentals',
     milestone: 'Step 1',
-    description: 'Built scripting confidence for DevOps workflows and task automation.',
+    description: 'Scripting foundations for automation.',
   },
   {
     name: 'Linux Command-Line Fluency',
     milestone: 'Step 2',
-    description: 'Learned system navigation, permissions, services, and operational shell scripting.',
+    description: 'Command line, permissions, and operational workflows.',
   },
   {
     name: 'Git & GitHub Version Control',
     milestone: 'Step 3',
-    description: 'Practicing version control discipline, branching strategies, and collaborative workflows.',
+    description: 'Practicing version control and collaboration.',
   },
   {
     name: 'Docker & Containerization',
     milestone: 'Step 4',
-    description: 'Building hands-on understanding of container fundamentals and repeatable deployment environments.',
+    description: 'Building container and environment fundamentals.',
   },
   {
     name: 'Jenkins CI/CD Pipelines',
     milestone: 'Step 5 (Current)',
-    description: 'Actively learning pipeline orchestration, job configuration, and automated release workflows.',
+    description: 'Current focus: pipeline orchestration and release workflows.',
   },
   {
     name: 'AWS Cloud Fundamentals',
     milestone: 'Step 6',
-    description: 'Exploring AWS services, deployment patterns, and cloud-native operational thinking.',
+    description: 'Upcoming focus: AWS services and deployment patterns.',
   },
   {
     name: 'Terraform Infrastructure as Code',
     milestone: 'Step 7 (Currently learning)',
-    description: 'Learning declarative infrastructure provisioning and infrastructure-as-code fundamentals.',
+    description: 'Upcoming focus: declarative infrastructure basics.',
   },
 ];
 

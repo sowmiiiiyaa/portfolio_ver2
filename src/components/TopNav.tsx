@@ -4,9 +4,10 @@ import { navigationItems, profile } from '@/data/siteData';
 
 type TopNavProps = {
   activeSection: string;
+  resumeAvailable: boolean;
 };
 
-export function TopNav({ activeSection }: TopNavProps) {
+export function TopNav({ activeSection, resumeAvailable }: TopNavProps) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -36,7 +37,7 @@ export function TopNav({ activeSection }: TopNavProps) {
       </button>
 
       <nav className={`top-nav__links ${open ? 'top-nav__links--open' : ''}`} aria-label="Primary navigation">
-        {navigationItems.map((item) => {
+        {navigationItems.filter((item) => item.label !== 'Resume' || resumeAvailable).map((item) => {
           const section = item.href.slice(1);
           const isActive = activeSection === section && item.label !== 'Resume';
           return (

@@ -15,16 +15,15 @@ import { InteractiveTerminal } from '@/components/InteractiveTerminal';
 import { Contact } from '@/components/Contact';
 import { Footer } from '@/components/Footer';
 
-function SectionShell({ id, children }: { id: string; children: ReactNode }) {
+function SectionShell({ children }: { children: ReactNode }) {
   const reducedMotion = useReducedMotion();
 
   return (
     <motion.div
-      id={id}
-      initial={reducedMotion ? false : { opacity: 0, y: 24 }}
-      whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
+      initial={reducedMotion ? false : { opacity: 0 }}
+      whileInView={reducedMotion ? undefined : { opacity: 1 }}
       viewport={{ once: true, amount: 0.15 }}
-      transition={{ duration: reducedMotion ? 0 : 0.45 }}
+      transition={{ duration: reducedMotion ? 0 : 0.3 }}
     >
       {children}
     </motion.div>
@@ -64,32 +63,32 @@ export default function App() {
     <>
       <Seo title="Sowmiya S | DevOps & Cloud Engineering Student" description="Portfolio of Sowmiya S, a Computer Science and Engineering student focused on DevOps, cloud technologies, Python automation, Linux, Docker, Jenkins, Git, GitHub, AWS, and CI/CD." />
 
-      <div className="relative min-h-screen overflow-hidden">
+      <div className="relative min-h-screen overflow-x-clip">
         <Atmosphere />
-        <TopNav activeSection={activeSection} />
+        <TopNav activeSection={activeSection} resumeAvailable={resumeAvailable} />
 
-        <main className="relative z-10 pb-10">
-          <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 pt-20 md:px-8 md:pt-24">
+        <main className="relative z-10">
+          <div className="mx-auto flex max-w-7xl flex-col gap-0 px-4 md:px-8">
             <Hero onViewProjects={scrollToProjects} resumeAvailable={resumeAvailable} resumeHref="/resume.pdf" />
-            <SectionShell id="about-shell">
+            <SectionShell>
               <About profileImageAvailable={profileImageAvailable} />
             </SectionShell>
-            <SectionShell id="skills-shell">
+            <SectionShell>
               <Skills />
             </SectionShell>
-            <SectionShell id="projects-shell">
+            <SectionShell>
               <Projects />
             </SectionShell>
-            <SectionShell id="journey-shell">
+            <SectionShell>
               <LearningJourney />
             </SectionShell>
-            <SectionShell id="github-shell">
+            <SectionShell>
               <GitHubSection />
             </SectionShell>
-            <SectionShell id="terminal-shell">
+            <SectionShell>
               <InteractiveTerminal resumeAvailable={resumeAvailable} resumeHref="/resume.pdf" />
             </SectionShell>
-            <SectionShell id="contact-shell">
+            <SectionShell>
               <Contact resumeAvailable={resumeAvailable} resumeHref="/resume.pdf" />
             </SectionShell>
           </div>

@@ -146,8 +146,8 @@ export function InteractiveTerminal(_props: TerminalProps) {
     <section id="terminal" className="section-shell">
       <div className="space-y-4">
         <div className="max-w-3xl space-y-2">
-          <p className="font-mono text-xs uppercase tracking-[0.35em] text-cyanGlow/80">Interactive Terminal</p>
-          <h2 className="font-display text-3xl font-semibold text-white md:text-4xl">Portfolio Explorer</h2>
+          <p className="font-mono text-xs uppercase tracking-[0.35em] text-cyanGlow/80">Terminal</p>
+          <h2 className="font-display text-3xl font-semibold text-white md:text-4xl">Explore the portfolio.</h2>
         </div>
 
         <div className="flex flex-wrap gap-2">

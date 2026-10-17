@@ -7,10 +7,7 @@ export function Skills() {
       <div className="space-y-5">
         <div className="max-w-3xl space-y-2">
           <p className="font-mono text-xs uppercase tracking-[0.35em] text-cyanGlow/80">Skills</p>
-          <h2 className="font-display text-3xl font-semibold text-white md:text-4xl">Tools I practice, understand, and am learning.</h2>
-          <p className="text-sm leading-6 text-slate-300 md:text-base">
-            These categories describe where each technology fits in my current learning journey.
-          </p>
+          <h2 className="font-display text-3xl font-semibold text-white md:text-4xl">Tools in my stack.</h2>
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-4">

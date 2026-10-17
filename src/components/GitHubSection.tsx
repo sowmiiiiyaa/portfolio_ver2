@@ -1,22 +1,7 @@
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ExternalLink, Github, RefreshCw } from 'lucide-react';
-import { profile } from '@/data/siteData';
+import { profile, projects } from '@/data/siteData';
 import { useGitHubData } from '@/hooks/useGitHubData';
-
-function ExternalImage({ src, alt, className, fallback }: { src: string; alt: string; className: string; fallback: string }) {
-  const [failed, setFailed] = useState(false);
-
-  if (failed) {
-    return (
-      <div role="img" aria-label={alt} className={`${className} flex min-h-28 items-center justify-center text-center text-sm text-slate-400`}>
-        {fallback}
-      </div>
-    );
-  }
-
-  return <img src={src} alt={alt} className={className} loading="lazy" decoding="async" onError={() => setFailed(true)} />;
-}
 
 function RepositoryCard({ repository }: { repository: ReturnType<typeof useGitHubData>['topRepositories'][number] }) {
   return (
@@ -42,24 +27,21 @@ function RepositoryCard({ repository }: { repository: ReturnType<typeof useGitHu
 }
 
 export function GitHubSection() {
-  const { topRepositories, activity, loading, error, username } = useGitHubData();
+  const { topRepositories, activity, loading, error } = useGitHubData();
 
   return (
     <section id="github" className="section-shell">
       <div className="space-y-5">
         <div className="max-w-3xl space-y-2">
           <p className="font-mono text-xs uppercase tracking-[0.35em] text-cyanGlow/80">GitHub</p>
-          <h2 className="font-display text-3xl font-semibold text-white md:text-4xl">A quick view of my public repositories and technical work.</h2>
-          <p className="text-sm leading-6 text-slate-300 md:text-base">Repository details and links are shown first so recruiters can review the work directly.</p>
+          <h2 className="font-display text-3xl font-semibold text-white md:text-4xl">Code, context, and activity.</h2>
         </div>
 
-        {error ? <div className="rounded-2xl border border-amber-400/30 bg-amber-400/10 p-4 text-sm text-amber-100">GitHub data is unavailable right now. The public GitHub links remain active.</div> : null}
-
-        <div className="space-y-4 rounded-[1.5rem] border border-white/10 bg-white/5 p-4 shadow-softGlow">
+        <div className="space-y-3 rounded-xl border border-white/10 bg-white/5 p-3 shadow-softGlow">
           <div className="flex items-center justify-between gap-3">
             <div>
               <p className="font-mono text-xs uppercase tracking-[0.35em] text-cyanGlow/80">Relevant repositories</p>
-              <p className="mt-2 text-sm text-slate-300">Open a repository to review the code, README, and implementation details.</p>
+              <p className="mt-2 text-sm text-slate-300">Public code, project context, and implementation details.</p>
             </div>
             <a href={profile.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm text-white transition hover:border-electric/40 hover:bg-electric/10">
               <Github className="h-4 w-4" aria-hidden="true" />
@@ -69,32 +51,34 @@ export function GitHubSection() {
 
           <div className="grid gap-3 lg:grid-cols-2 2xl:grid-cols-3">
             {loading && topRepositories.length === 0
-              ? Array.from({ length: 3 }).map((_, index) => (
-                  <div key={index} className="animate-pulse rounded-[1.75rem] border border-white/8 bg-black/15 p-5">
-                    <div className="h-5 w-2/3 rounded bg-white/10" />
-                    <div className="mt-4 h-4 w-full rounded bg-white/10" />
-                    <div className="mt-2 h-4 w-5/6 rounded bg-white/10" />
-                    <div className="mt-6 h-24 rounded-2xl bg-white/10" />
-                  </div>
-                ))
+              ? <div className="rounded-xl border border-white/8 bg-black/15 p-4 text-sm text-slate-300">Checking GitHub data…</div>
               : topRepositories.length > 0
                 ? topRepositories.map((repository) => <RepositoryCard key={repository.id} repository={repository} />)
-                : <div className="rounded-[1.75rem] border border-white/8 bg-black/15 p-5 text-sm text-slate-300">Repository data is currently unavailable. <a href={profile.github} target="_blank" rel="noreferrer" className="text-cyanGlow underline underline-offset-4">Open GitHub profile</a></div>}
+                : <div className="grid gap-3 md:grid-cols-[1fr_auto] rounded-xl border border-white/8 bg-black/15 p-4">
+                    <div>
+                      <p className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-cyanGlow/80">Verified project fallback</p>
+                      <h3 className="mt-2 font-display text-lg font-semibold text-white">{projects[0].name}</h3>
+                      <p className="mt-1 text-sm leading-5 text-slate-300">{projects[0].description}</p>
+                    </div>
+                    <a href={projects[0].github} target="_blank" rel="noreferrer" className="inline-flex h-fit items-center justify-center gap-2 rounded-full border border-electric/30 bg-electric px-3 py-2 text-sm font-semibold text-midnight-900">
+                      Open repository <ExternalLink className="h-4 w-4" />
+                    </a>
+                  </div>}
           </div>
         </div>
 
-        <div className="grid gap-4 xl:grid-cols-2">
-          <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-4 shadow-softGlow">
+        <div className="grid gap-3 xl:grid-cols-2">
+          <div className="rounded-xl border border-white/10 bg-white/5 p-3 shadow-softGlow">
             <div className="flex items-center justify-between gap-3">
               <div>
                 <p className="font-mono text-xs uppercase tracking-[0.35em] text-cyanGlow/80">Latest activity</p>
-                <p className="mt-2 text-sm text-slate-300">Recent public activity from GitHub.</p>
+                <p className="mt-2 text-sm text-slate-300">Recent public activity, when available.</p>
               </div>
               <RefreshCw aria-hidden="true" className={`h-4 w-4 text-cyanGlow ${loading ? 'animate-spin' : ''}`} />
             </div>
-            <div className="mt-4 space-y-2">
-              {activity.length > 0 ? activity.map((entry) => (
-                <div key={`${entry.label}-${entry.occurredAt}`} className="rounded-xl border border-white/8 bg-black/15 p-3">
+            <div className="mt-3 space-y-2">
+              {activity.length > 0 ? activity.map((entry, index) => (
+                <div key={`${entry.label}-${entry.occurredAt}-${index}`} className="rounded-xl border border-white/8 bg-black/15 p-3">
                   <p className="text-sm text-white">{entry.label}</p>
                   <p className="mt-1 text-xs uppercase tracking-[0.3em] text-slate-400">{entry.occurredAt}</p>
                 </div>
@@ -102,17 +86,12 @@ export function GitHubSection() {
             </div>
           </div>
 
-          <div className="space-y-2.5 rounded-[1.25rem] border border-white/10 bg-white/5 p-3 pb-2 shadow-softGlow">
-            <div>
-              <p className="font-mono text-xs uppercase tracking-[0.35em] text-cyanGlow/80">Contribution activity</p>
-              <p className="mt-1.5 text-sm text-slate-300">One optional activity view, kept secondary to the repositories.</p>
-            </div>
-            <ExternalImage
-              src={`https://ghchart.rshah.org/1f7afe/${username}`}
-              alt="GitHub contribution graph for Sowmiya S"
-              className="block w-full rounded-[0.95rem] border border-white/10 bg-midnight-900/80 p-1.5 object-contain max-h-[170px]"
-              fallback="Contribution activity is currently unavailable."
-            />
+          <div className="rounded-xl border border-white/10 bg-white/5 p-3 shadow-softGlow">
+            <p className="font-mono text-xs uppercase tracking-[0.35em] text-cyanGlow/80">Live data status</p>
+            <p className="mt-2 text-sm leading-5 text-slate-300">
+              {error ?? (loading ? 'Checking GitHub activity…' : 'Repository and activity data loaded.')}
+            </p>
+            <p className="mt-3 text-xs leading-5 text-slate-500">Contribution activity is shown only when backed by a successful live response.</p>
           </div>
         </div>
 

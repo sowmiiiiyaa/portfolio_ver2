@@ -74,7 +74,7 @@ export function Projects() {
           <p className="eyebrow">Selected work</p>
           <h2>Small systems, real workflows.</h2>
         </div>
-        <p>Verified project work connecting source control, containers, CI/CD, and Linux.</p>
+        <p>Source control, containers, CI/CD, and Linux in practice.</p>
       </div>
       <div className="projects-list">
         {projects.map((project, index) => <ProjectCard key={project.name} project={project} index={index} />)}

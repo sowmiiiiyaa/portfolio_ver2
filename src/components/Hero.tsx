@@ -25,13 +25,13 @@ export function Hero({ onViewProjects, resumeAvailable, resumeHref }: HeroProps)
     <section id="home" className="hero-section">
       <div className="hero-section__copy">
         <motion.p className="eyebrow" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
-          DevOps / Cloud / Automation
+          DevOps / Cloud Engineering
         </motion.p>
         <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.08 }}>
           <span>Sowmiya <span className="hero-section__name">S.</span></span>
         </motion.h1>
         <motion.p className="hero-section__statement" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.16 }}>
-          I build. I automate. I deploy.
+          Build. Automate. Deploy.
         </motion.p>
         <motion.p className="hero-section__intro" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.28 }}>
           {profile.intro}
