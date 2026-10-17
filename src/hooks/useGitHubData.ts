@@ -6,16 +6,35 @@ import type {
   GitHubRepositorySummary,
 } from '@/types';
 
+type GitHubEndpoint = 'profile' | 'repositories' | 'activity';
+
+type GitHubEndpointError = {
+  message: string;
+  retryAt?: number;
+};
+
 type GitHubState = {
   profile: GitHubProfileSummary | null;
   repositories: GitHubRepositorySummary[];
   languages: GitHubLanguageSummary[];
   activity: GitHubActivitySummary[];
   loading: boolean;
-  error: string | null;
+  errors: Partial<Record<GitHubEndpoint, GitHubEndpointError>>;
+  retryAt: number | null;
 };
 
+type GitHubEvent = {
+  type: string;
+  repo?: { name?: string };
+  created_at: string;
+};
+
+type EndpointResult<T> =
+  | { data: T; error?: never }
+  | { data?: never; error: GitHubEndpointError };
+
 const username = 'sowmiiiiyaa';
+const retryCooldownMs = 5000;
 
 const activityLabels: Record<string, string> = {
   PushEvent: 'Pushed code to',
@@ -50,81 +69,105 @@ function sortLanguages(repositories: GitHubRepositorySummary[]) {
     .slice(0, 6);
 }
 
+export function getRetryAt(response: Response) {
+  const reset = Number(response.headers.get('X-RateLimit-Reset'));
+  return Number.isFinite(reset) && reset > 0 ? reset * 1000 : undefined;
+}
+
+export function getEndpointError(response: Response, endpoint: GitHubEndpoint): GitHubEndpointError {
+  const retryAt = response.status === 403 ? getRetryAt(response) : undefined;
+  if (response.status === 403 && response.headers.get('X-RateLimit-Remaining') === '0') {
+    return {
+      message: `${endpoint === 'activity' ? 'Recent activity' : endpoint === 'repositories' ? 'Repositories' : 'Profile'} is rate-limited by GitHub.`,
+      retryAt,
+    };
+  }
+
+  return {
+    message: `${endpoint === 'activity' ? 'Recent activity' : endpoint === 'repositories' ? 'Repositories' : 'Profile'} could not be loaded (HTTP ${response.status}).`,
+    retryAt,
+  };
+}
+
+export async function fetchEndpoint<T>(url: string, endpoint: GitHubEndpoint, signal: AbortSignal): Promise<EndpointResult<T>> {
+  try {
+    const response = await fetch(url, {
+      signal,
+      headers: { Accept: 'application/vnd.github+json' },
+    });
+
+    if (!response.ok) {
+      return { error: getEndpointError(response, endpoint) };
+    }
+
+    return { data: (await response.json()) as T };
+  } catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError') throw error;
+    return {
+      error: {
+        message: `${endpoint === 'activity' ? 'Recent activity' : endpoint === 'repositories' ? 'Repositories' : 'Profile'} could not be loaded. Check your connection and try again.`,
+      },
+    };
+  }
+}
+
 export function useGitHubData() {
+  const [retryKey, setRetryKey] = useState(0);
+  const [cooldownUntil, setCooldownUntil] = useState(0);
   const [state, setState] = useState<GitHubState>({
     profile: null,
     repositories: [],
     languages: [],
     activity: [],
     loading: true,
-    error: null,
+    errors: {},
+    retryAt: null,
   });
 
   useEffect(() => {
     const controller = new AbortController();
 
     const load = async () => {
-      try {
-        const [profileResponse, repoResponse, activityResponse] = await Promise.all([
-          fetch(`https://api.github.com/users/${username}`, {
-            signal: controller.signal,
-            headers: { Accept: 'application/vnd.github+json' },
-          }),
-          fetch(`https://api.github.com/users/${username}/repos?per_page=100&sort=pushed`, {
-            signal: controller.signal,
-            headers: { Accept: 'application/vnd.github+json' },
-          }),
-          fetch(`https://api.github.com/users/${username}/events/public?per_page=10`, {
-            signal: controller.signal,
-            headers: { Accept: 'application/vnd.github+json' },
-          }),
-        ]);
+      setState((current) => ({ ...current, loading: true, errors: {}, retryAt: null }));
 
-        const failedResponse = [profileResponse, repoResponse, activityResponse].find((response) => !response.ok);
-        if (failedResponse) {
-          const remaining = failedResponse.headers.get('X-RateLimit-Remaining');
-          if (failedResponse.status === 403 && remaining === '0') {
-            throw new Error('GitHub API rate limit reached. Profile links remain available.');
-          }
-          throw new Error(`GitHub API returned ${failedResponse.status}. Profile links remain available.`);
-        }
+      const [profileResult, repositoriesResult, activityResult] = await Promise.all([
+        fetchEndpoint<GitHubProfileSummary>(`https://api.github.com/users/${username}`, 'profile', controller.signal),
+        fetchEndpoint<GitHubRepositorySummary[]>(`https://api.github.com/users/${username}/repos?per_page=100&sort=pushed`, 'repositories', controller.signal),
+        fetchEndpoint<GitHubEvent[]>(`https://api.github.com/users/${username}/events/public?per_page=10`, 'activity', controller.signal),
+      ]);
 
-        const profileJson = (await profileResponse.json()) as GitHubProfileSummary;
-        const reposJson = (await repoResponse.json()) as GitHubRepositorySummary[];
-        const activityJson = (await activityResponse.json()) as Array<{
-          type: string;
-          repo?: { name?: string };
-          created_at: string;
-        }>;
+      if (controller.signal.aborted) return;
 
-        const activity = activityJson.slice(0, 6).map((event) => ({
-          label: `${activityLabels[event.type] ?? 'Updated activity in'} ${event.repo?.name ?? 'a repository'}`,
-          repo: event.repo?.name,
-          occurredAt: timeAgo(event.created_at),
-        }));
+      const errors: GitHubState['errors'] = {};
+      const retryTimes = [profileResult, repositoriesResult, activityResult]
+        .map((result) => result.error?.retryAt)
+        .filter((value): value is number => typeof value === 'number');
 
-        setState({
-          profile: profileJson,
-          repositories: reposJson,
-          languages: sortLanguages(reposJson),
-          activity,
-          loading: false,
-          error: null,
-        });
-      } catch (error) {
-        if (controller.signal.aborted) return;
-        setState((current) => ({
-          ...current,
-          loading: false,
-          error: error instanceof Error ? error.message : 'Failed to load GitHub data.',
-        }));
-      }
+      if (profileResult.error) errors.profile = profileResult.error;
+      if (repositoriesResult.error) errors.repositories = repositoriesResult.error;
+      if (activityResult.error) errors.activity = activityResult.error;
+
+      const repositories = repositoriesResult.data ?? [];
+      const activity = (activityResult.data ?? []).slice(0, 6).map((event) => ({
+        label: `${activityLabels[event.type] ?? 'Updated activity in'} ${event.repo?.name ?? 'a repository'}`,
+        repo: event.repo?.name,
+        occurredAt: timeAgo(event.created_at),
+      }));
+
+      setState({
+        profile: profileResult.data ?? null,
+        repositories,
+        languages: sortLanguages(repositories),
+        activity,
+        loading: false,
+        errors,
+        retryAt: retryTimes.length > 0 ? Math.min(...retryTimes) : null,
+      });
     };
 
-    load();
-
+    void load();
     return () => controller.abort();
-  }, []);
+  }, [retryKey]);
 
   const topRepositories = useMemo(
     () =>
@@ -134,9 +177,18 @@ export function useGitHubData() {
     [state.repositories],
   );
 
+  const retry = () => {
+    if (state.loading || Date.now() < cooldownUntil) return;
+    const nextCooldown = Date.now() + retryCooldownMs;
+    setCooldownUntil(nextCooldown);
+    setRetryKey((current) => current + 1);
+  };
+
   return {
     ...state,
     topRepositories,
     username,
+    retry,
+    retryDisabled: state.loading || Date.now() < cooldownUntil,
   };
 }

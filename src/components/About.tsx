@@ -31,7 +31,7 @@ export function About({ profileImageAvailable }: AboutProps) {
         >
           {profileImageAvailable && !imageFailed ? (
             <img
-              src="/profile.jpg"
+              src="/profile.jpeg"
               alt="Portrait of Sowmiya S"
               loading="lazy"
               decoding="async"
@@ -40,7 +40,7 @@ export function About({ profileImageAvailable }: AboutProps) {
           ) : (
             <div className="about-photo__fallback" role="img" aria-label="Profile photograph unavailable">
               <span>PHOTO</span>
-              <small>Add /profile.jpg to public to display the uploaded photograph.</small>
+              <small>Add /profile.jpeg to public to display the uploaded photograph.</small>
             </div>
           )}
         </motion.div>

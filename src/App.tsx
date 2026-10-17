@@ -33,7 +33,7 @@ function SectionShell({ children }: { children: ReactNode }) {
 export default function App() {
   const [activeSection, setActiveSection] = useState('home');
   const resumeAvailable = useAssetAvailability('/resume.pdf');
-  const profileImageAvailable = useAssetAvailability('/profile.jpg');
+  const profileImageAvailable = useAssetAvailability('/profile.jpeg');
 
   useEffect(() => {
     const sections = navigationItems

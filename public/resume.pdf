@@ -1,0 +1,44 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 5 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 454 >>
+stream
+BT
+/F1 18 Tf
+22 TL
+48 740 Td
+(Sowmiya S) Tj
+T* (Aspiring DevOps Engineer | Python Automation Beginner) Tj
+T* (DevOps learner focused on automation, cloud fundamentals, and practical tooling.) Tj
+T* (Skills: Python, Linux, Docker, Git, GitHub Actions, Terraform, AWS) Tj
+T* (Projects: Focus Timer | System Monitoring) Tj
+T* (Contact: sowmiyaa757@gmail.com) Tj
+T* (GitHub: github.com/sowmiiiiyaa) Tj
+T* (LinkedIn: linkedin.com/in/sowmiya-s-241486346) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000746 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+816
+%%EOF
